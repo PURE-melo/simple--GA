@@ -1,0 +1,10 @@
+function [objvalue]=F(pop,chromlength,limit)
+temp1=choosechrom(pop,1,chromlength);
+temp2=choosechrom(pop,chromlength+1,chromlength);
+x1=limit+(temp1*2*abs(limit))/(2.^chromlength-1);
+x2=limit+(temp2*2*abs(limit))/(2.^chromlength-1);
+%objvalue=(20+x1.*x1-10*cos(2*pi*x1)+x2.*x2-10*cos(2*pi*x2));
+% objvalue=(1+x1.*sin(4*pi*x1)-x2.*sin(4*pi*x2+pi));
+% objvalue=((-(x1.*x1+x2.*x2).^0.25).*((sin(50*(x1.*x1+x2.*x2).^0.1)).^2+1));
+objvalue=((3/(0.05+(x1.*x1+x2.*x2))).^2+((x1.*x1+x2.*x2).^2));
+end
