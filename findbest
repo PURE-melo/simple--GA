@@ -1,0 +1,11 @@
+function [bestX,bestfit]=findbest(pop,fitvalue)
+[px,~]=size(pop);
+bestX=pop(1,:);
+bestfit=fitvalue(1);
+for i=2:px
+if fitvalue(i)>bestfit
+    bestX=pop(i,:);
+    bestfit=fitvalue(i);
+end
+end
+end
