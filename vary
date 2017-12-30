@@ -1,0 +1,17 @@
+function [newpop]=vary(pop,pm)
+[px,py]=size(pop);
+for i=1:px
+    if(rand<pm)%%基于变异概率选择个体进行变异
+        point=round(rand*py);
+        while point<=1
+         point=round(rand*py);%%变异的点
+        end
+        if pop(i,point)==0
+            pop(i,point)=1;
+        else
+            pop(i,point)=0;
+        end
+        end
+end
+newpop=pop;
+end
