@@ -1,0 +1,17 @@
+function [newpop,newin,fitin]=select(pop,fitvalue)
+totalfit=sum(fitvalue);
+fitvalue=fitvalue/(totalfit);
+fitvalue=cumsum(fitvalue);%%累积概率
+[px,~]=size(pop);
+ms=sort(rand(px,1));%%轮盘赌选择
+fitin=1;
+newin=1;
+  while newin<=px
+    if(ms(newin))<fitvalue(fitin)
+    newpop(newin,:)=pop(fitin,:);
+    newin=newin+1;
+    else
+        fitin=fitin+1;
+    end
+   end
+end
