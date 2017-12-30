@@ -1,0 +1,4 @@
+function popp=choosechrom(pop,spoint,length)
+pop1=pop(:,spoint:spoint+length-1);%%取基因段
+popp=decode(pop1);
+end
