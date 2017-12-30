@@ -1,0 +1,72 @@
+clear all
+clc
+popsize=20;%%种群数量
+n=2;%%变量个数
+pc=0.9;%%交叉概率
+pm=0.2;%%变异概率
+%range=[-1,1];%%%f1%取值范围
+range=[-0.02,0.02];%%%f2%取值范围
+precision=0.000001;
+binarylength=ceil(log2((max(range)-min(range))/precision));%%二进制编码长度
+%%%%%%%%%%%%%%%%初始参数设定%%%%%%%%%%%%%%%%%%%
+pop=init(popsize,n*binarylength);%%初始化种群
+%%%%%%%%%%%%评价群体并进行遗传操作%%%%%%%%%%%%%%
+for i=1:10000
+[objvalue]=F(pop,binarylength,min(range));%%计算目标函数值
+fitvalue=fitness(objvalue);%%计算适应度函数值
+[newpop,newin,fitin]=select(pop,fitvalue);%%选择
+[newpop]=crossover(newpop,pc);%%交叉
+[newpop]=vary(newpop,pm);%%变异
+[newobjvalue]=F(newpop,binarylength,min(range));
+newfitvalue=fitness(newobjvalue);
+[bestX,bestfit]=findbest(newpop,newfitvalue);%%每代最优个体
+if i==1
+    y(i)=bestfit;
+    x1(i)=min(range)+(choosechrom(bestX,1,binarylength)*2*abs(min(range)))/(2.^binarylength-1);%%解码
+    x2(i)=min(range)+(choosechrom(bestX,binarylength+1,binarylength)*2*abs(min(range))/(2.^binarylength-1));%%解码
+elseif bestfit>abs(y(i-1))
+    y(i)=bestfit;
+     x1(i)=min(range)+(choosechrom(bestX,1,binarylength)*2*abs(min(range)))/(2.^binarylength-1);%%解码
+    x2(i)=min(range)+(choosechrom(bestX,binarylength+1,binarylength)*2*abs(min(range))/(2.^binarylength-1));%%解码
+else
+    y(i)=y(i-1);
+    x1(i)=x1(i-1);
+    x2(i)=x2(i-1);
+end
+pop=newpop;
+end
+% y=-y;
+disp(['满意解： ','x=',num2str(x1(i)),'   y=',num2str(x2(i))])
+%%%%%%%%%%%%%画图%%%%%%%%%%%%%
+% x3=-1:0.01:1;
+% x4=-1:0.01:1;
+% f=@(x3,x4)(1+x3*sin(4*pi*x3)-x4*sin(4*pi*x4+pi));
+% x3=-5.12:0.01:5.12;
+% x4=-5.12:0.01:5.12;
+% f=@(x3,x4)(20+x3.*x3-10*cos(2*pi*x3)+x4.*x4-10*cos(2*pi*x4));
+% x3=-5.12:0.01:5.12;
+% x4=-5.12:0.01:5.12;
+% f=@(x3,x4)((-(x3.*x3+x4.*x4).^0.25).*((sin(50*(x3.*x3+x4.*x4).^0.1)).^2+1));
+x3=-5.12:0.01:5.12;
+x4=-5.12:0.01:5.12;
+f=@(x3,x4)((3/(0.05+(x3.*x3+x4.*x4))).^2+((x3.*x3+x4.*x4).^2));
+for i = 1:length(x3)
+    for j = 1:length(x4)
+	  J(i,j) = f(x3(i),x4(j));
+    end
+end
+mesh(x3,x4,J)
+hold on
+plot3(x2,x1,y,'r*')
+xlabel('x')
+ylabel('y')
+zlabel('f')
+%title('f=20+x.*x-10*cos(2*pi*x)+y.*y-10*cos(2*pi*y)')
+% title('f=1+x.*sin(4*pi*x)-y.*sin(4*pi*y+pi)')
+% title('f=((-(x.*x).^ （0.25）).*((sin(50*(x.*x+y.*y).^ (0.1)）).^2+1))')
+title('f=((3/(0.05+(x.*x+y.*y))).^2+((x.*x+y.*y).^2))')
+figure
+plot(y)
+xlabel('迭代次数')
+ylabel('目标函数值')
+title('收敛曲线')
