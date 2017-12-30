@@ -1,0 +1,18 @@
+function fitvalue=fitness(objvalue)
+e=0.0000001;
+[px,~]=size(objvalue);
+ for i=1:px
+if objvalue(i)+e>0
+    temp=e+objvalue(i);
+else
+    temp=0.0;
+end
+% if objvalue(i)+e>0
+%     temp=0;
+% else
+%     temp=-(e+objvalue(i));
+% end
+fitvalue(i)=temp;
+end
+fitvalue=fitvalue';
+end
